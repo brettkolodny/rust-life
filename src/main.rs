@@ -1,17 +1,20 @@
 mod life;
 
+#[cfg(test)]
+mod tests;
+
 use life::*;
+use std::env;
 use std::io;
 
 fn main() -> io::Result<()> {
-    let state = LifeState::from_rle("inputs/2blockrpent.rle")?;
+    let args: Vec<String> = env::args().collect();
 
-    for i in 0..GRIDY {
-        for j in 0..GRIDX {
-            print!("{}", state.state[i as usize][j as usize]);
-        }
-        println!();
-    }
+    println!("{:?}", args);
+
+    let state = LifeState::from_rle(args[1].as_str())?;
+
+    println!("{}", state);
 
     Ok(())
 }

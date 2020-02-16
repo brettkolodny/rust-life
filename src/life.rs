@@ -3,6 +3,7 @@ extern crate regex;
 use regex::Regex;
 
 use std::ffi::OsStr;
+use std::fmt;
 use std::fs::File;
 use std::io;
 use std::io::prelude::*;
@@ -133,5 +134,25 @@ impl LifeState {
         };
 
         Ok(LifeState { state })
+    }
+
+    pub fn next_generation(&mut self) {
+        println!("TODO");
+    }
+}
+
+impl fmt::Display for LifeState {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut state_string = String::new();
+
+        for i in 0..GRIDY {
+            for j in 0..GRIDX {
+                state_string.push(self.state[i as usize][j as usize]);
+            }
+
+            state_string.push('\n');
+        }
+
+        write!(f, "{}", state_string)
     }
 }
