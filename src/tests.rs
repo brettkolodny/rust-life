@@ -41,7 +41,7 @@ fn parse_output_file(file_name: &str) -> Vec<[[char; GRIDX]; GRIDY]> {
 }
 
 #[test]
-fn test_blinker() {
+fn blinker_test() {
     let output_vec = parse_output_file("outputs/blinker.expected.txt");
     let mut blinker = LifeState::from_rle("inputs/blinker.rle").unwrap();
 
@@ -49,7 +49,7 @@ fn test_blinker() {
         blinker.next_generation();
         for i in 0..GRIDY {
             for j in 0..GRIDX {
-                if arr[i][j] != blinker.state[i][j] {
+                if arr[i][j] != blinker.state[i][j][0] {
                     assert!(false);
                 }
             }

@@ -10,7 +10,9 @@ use std::io;
 fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
 
-    println!("{:?}", args);
+    if args.len() < 3 {
+        return Err(io::Error::new(io::ErrorKind::InvalidInput, "Invalid arguments"));
+    }
 
     let state = LifeState::from_rle(args[1].as_str())?;
 

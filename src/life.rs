@@ -16,7 +16,8 @@ pub const LIVE: char = 'X';
 pub const DEAD: char = ' ';
 
 pub struct LifeState {
-    pub state: [[char; GRIDX]; GRIDY],
+    pub state: [[[char; 2]; GRIDX]; GRIDY],
+    current_layer: usize,
 }
 
 impl LifeState {
@@ -96,7 +97,7 @@ impl LifeState {
                     line_number += 1;
                 }
 
-                let mut initial_state: [[char; GRIDX]; GRIDY] = [[DEAD; GRIDX]; GRIDY];
+                let mut initial_state: [[[char; 2]; GRIDX]; GRIDY] = [[[DEAD; 2]; GRIDX]; GRIDY];
 
                 let x_start = (GRIDX / 2) - (width.unwrap() / 2) as usize;
                 let y_start = (GRIDY / 2) - (height.unwrap() / 2) as usize;
@@ -109,11 +110,11 @@ impl LifeState {
                         match cell_type.as_str() {
                             "b" => {
                                 current_x += 1;
-                                initial_state[current_y][current_x] = DEAD
+                                initial_state[current_y][current_x][0] = DEAD
                             }
                             "o" => {
                                 current_x += 1;
-                                initial_state[current_y][current_x] = LIVE
+                                initial_state[current_y][current_x][0] = LIVE
                             }
                             "$" => {
                                 current_y += 1;
@@ -133,7 +134,7 @@ impl LifeState {
             }
         };
 
-        Ok(LifeState { state })
+        Ok(LifeState { state, current_layer: 0 })
     }
 
     pub fn next_generation(&mut self) {
@@ -147,7 +148,7 @@ impl fmt::Display for LifeState {
 
         for i in 0..GRIDY {
             for j in 0..GRIDX {
-                state_string.push(self.state[i as usize][j as usize]);
+                state_string.push(self.state[i as usize][j as usize][self.current_layer]);
             }
 
             state_string.push('\n');
