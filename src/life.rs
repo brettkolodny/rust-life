@@ -1,6 +1,6 @@
 extern crate regex;
 
-use regex::{Regex};
+use regex::Regex;
 
 use std::ffi::OsStr;
 use std::fs::File;
@@ -35,7 +35,7 @@ impl LifeState {
                 let mut file_contents = String::new();
                 input_file.read_to_string(&mut file_contents)?;
 
-                let line_itr = file_contents.split("\n");
+                let line_itr = file_contents.split('\n');
 
                 let mut line_number = 1;
                 let mut width: Option<u32> = None;
@@ -53,22 +53,18 @@ impl LifeState {
                             ));
                         }
 
-                        let word_itr = line.split(" ");
+                        let word_itr = line.split(' ');
 
                         let number_reg = Regex::new(r"\d+,?").unwrap(); //match to any number with a possible comma after it
                         for word in word_itr {
                             if number_reg.is_match(word) {
-                                let mut size: u32 = 0;
-
-                                if let None = width {
-                                    size = word[0..(word.len() - 1)].parse().unwrap();
-                                    width = Some(size);
+                                if width.is_none() {
+                                    width = Some(word[0..(word.len() - 1)].parse().unwrap());
                                 } else {
-                                    size = word.parse().unwrap();
-                                    height = Some(size);
+                                    height = Some(word.parse().unwrap());
                                 }
 
-                                if size < 1 {
+                                if width == Some(0) || height == Some(0) {
                                     return Err(io::Error::new(
                                         io::ErrorKind::InvalidData,
                                         "Size parameters must be greater than 0",
@@ -110,26 +106,30 @@ impl LifeState {
                 for (num, cell_type) in rle_state {
                     for _ in 0..num {
                         match cell_type.as_str() {
-                            "b" => {current_x += 1; initial_state[current_y][current_x] = DEAD},
-                            "o" => {current_x += 1; initial_state[current_y][current_x] = LIVE},
+                            "b" => {
+                                current_x += 1;
+                                initial_state[current_y][current_x] = DEAD
+                            }
+                            "o" => {
+                                current_x += 1;
+                                initial_state[current_y][current_x] = LIVE
+                            }
                             "$" => {
                                 current_y += 1;
                                 current_x = x_start;
-                            },
+                            }
                             _ => break,
                         }
                     }
                 }
 
                 initial_state
-
             } else {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidInput,
                     "Unable to find file extension",
                 ));
             }
-
         };
 
         Ok(LifeState { state })

@@ -1,8 +1,6 @@
 mod life;
-mod parser;
 
 use life::*;
-use parser::*;
 use std::io;
 
 fn main() -> io::Result<()> {
