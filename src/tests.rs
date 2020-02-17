@@ -40,20 +40,75 @@ fn parse_output_file(file_name: &str) -> Vec<[[char; GRIDX]; GRIDY]> {
     output_vec
 }
 
-#[test]
-fn blinker_test() {
-    let output_vec = parse_output_file("outputs/blinker.expected.txt");
-    let mut blinker = LifeState::from_rle("inputs/blinker.rle").unwrap();
-
-    for arr in output_vec {
-        blinker.next_generation();
-        for i in 0..GRIDY {
-            for j in 0..GRIDX {
-                if arr[i][j] != blinker.state[i][j][0] {
-                    assert!(false);
-                }
+fn states_are_equal(
+    input_state: [[char; GRIDX]; GRIDY],
+    output_state: [[char; GRIDX]; GRIDY],
+) -> bool {
+    for i in 0..GRIDY {
+        for j in 0..GRIDX {
+            if input_state[i][j] != output_state[i][j] {
+                return false;
             }
         }
+    }
+
+    true
+}
+
+fn compare_input_output(input_file: &str, output_file: &str) -> bool {
+    let output_vec = parse_output_file(output_file);
+    let mut input = LifeState::from_rle(input_file).unwrap();
+
+    for output_state in output_vec {
+        let input_state = input.get_state();
+
+        if !states_are_equal(input_state, output_state) {
+            return false;
+        }
+
+        input.next_generation();
+    }
+
+    true
+}
+
+#[test]
+fn blinker_test() {
+    if !compare_input_output("inputs/blinker.rle", "outputs/blinker.expected.txt") {
+        assert!(false);
+    }
+
+    assert!(true);
+}
+
+#[test]
+fn two_blockrpent_0_test() {
+    if !compare_input_output(
+        "inputs/2blockrpent.rle",
+        "outputs/2blockrpent-0.expected.txt",
+    ) {
+        assert!(false);
+    }
+
+    assert!(true);
+}
+
+#[test]
+fn two_blockrpent_72_test() {
+    if !compare_input_output(
+        "inputs/2blockrpent.rle",
+        "outputs/2blockrpent-72.expected.txt",
+    ) {
+        assert!(false);
+    }
+
+    assert!(true);
+}
+
+#[test]
+fn pulsar_test() {
+    if !compare_input_output("inputs/pulsar.rle", "outputs/pulsar.expected.txt") {
+        assert!(false);
     }
 
     assert!(true);
